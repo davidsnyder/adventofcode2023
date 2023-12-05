@@ -48,7 +48,7 @@ defmodule Calibrator do
   end
 end
 
-input = IO.read(:stdio, :eof)
+result = IO.read(:stdio, :eof)
   |> String.split("\n")
   |> Enum.map(&Calibrator.calibrate/1)
   |> Enum.map(&String.to_integer/1)
@@ -56,4 +56,4 @@ input = IO.read(:stdio, :eof)
 # |> inspect(charlists: :as_lists)
 
 #Enum.each(input, &IO.puts/1)
-IO.puts(input)
+IO.puts(result)
