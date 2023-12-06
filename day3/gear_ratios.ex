@@ -38,21 +38,3 @@ matrix_map
   |> Enum.map(fn {k, v} ->  GearRatios.search_adjacent(matrix_map, k, v); end)
   |> Enum.reduce(0, fn ele, sum -> sum + ele; end)
   |> IO.puts
-
-  # load into 2D matrix
-  # 467..114..
-  # ...*......
-  # ..35..633.
-  # ......#...
-  # 617*......
-  # .....+.58.
-  # ..592.....
-  # ......755.
-  # ...$.*....
-  # .664.598..
-
-  # for 592 i need to check [5,1], 5,2 5,3 5,4 5,5
-         #                    [6,1] [6,5]
-          #                 [7,1], 7,2 7,3 7,4 7,5
-
-          # i have {2, 3} and 6 (row), so 6,2 and length 3
