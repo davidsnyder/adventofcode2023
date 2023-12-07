@@ -68,19 +68,6 @@ defmodule SeedLocator do
   end
 end
 
-defmodule RangeOverlap do
-  def ranges_overlap?(range1, range2) do
-    {start1, end1} = range1
-    {start2, end2} = range2
-
-    overlap =
-      (start1 <= end2 and end1 >= start2) or
-      (start2 <= end1 and end2 >= start1)
-
-    overlap
-  end
-end
-
 IO.read(:stdio, :eof)
   |> String.split("\n\n")
   |> Enum.map(&String.split(&1, ":"))
