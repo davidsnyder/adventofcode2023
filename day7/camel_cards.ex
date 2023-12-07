@@ -21,7 +21,7 @@ defmodule CamelCards do
     js = Map.pop(hand_dist, "J", 0)
 
     rank = if elem(js, 0) < @handsize do
-        max_ele = Map.delete(hand_dist, "J") |> Enum.max_by(fn x -> elem(x, 1) * Map.get(@wildcards, elem(x, 0)) end)
+        max_ele = Map.delete(hand_dist, "J") |> Enum.max_by(fn x -> {elem(x, 1), Map.get(@wildcards, elem(x, 0))} end) #77JKK
         wildcard_ele = %{elem(max_ele, 0) => elem(js, 0) + elem(max_ele, 1)}
         Map.merge(Map.delete(hand_dist, "J"), wildcard_ele)
         |> Map.values()
@@ -62,7 +62,7 @@ IO.read(:stdio, :eof)
   |> Enum.map(&CamelCards.parse_rank(&1))
   |> Enum.sort(fn {a_hand, _, a_rank}, {b_hand, _, b_rank} -> if b_rank == a_rank, do: CamelCards.tiebreaker(b_hand,a_hand), else: b_rank > a_rank end)
   |> Enum.with_index(1)
-  |> IO.inspect(charlists: :as_lists, limit: :infinity)
+  #|> IO.inspect(charlists: :as_lists, limit: :infinity)
   |> Enum.map(fn {{_h,b,_r},rr} -> b * rr end)
   |> Enum.sum
   |> IO.inspect
