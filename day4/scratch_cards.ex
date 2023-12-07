@@ -18,17 +18,13 @@ defmodule ScratchCards do
   end
 
   # part 2
-  def generate_copies(queue, full_list, num_cards) do
-    if :queue.is_empty(queue) do # base case
-      num_cards
-    else # recur
-      {{_, val}, new_queue} = :queue.out(queue)
-      if elem(val, 0) > 0 do # winning numbers > 0
-        copies = Enum.slice(full_list, (elem(val, 1)+1)..(elem(val, 0)+elem(val, 1))) # get copies
-        generate_copies(:queue.join(new_queue, :queue.from_list(copies)), full_list, num_cards + 1)
-      else # without winning numbers there's no copies, just add to the total count
-        generate_copies(new_queue, full_list, num_cards + 1)
-      end
+  def generate_copies(list, full_list) do
+    if Enum.empty?(list) do
+      0
+    else
+      [head | tail] = list
+      copies = if elem(head, 0) > 0, do: Enum.slice(full_list, (elem(head, 1)+1)..(elem(head, 0)+elem(head, 1))), else: []
+      1 + generate_copies(copies, full_list) + generate_copies(tail, full_list)
     end
   end
 end
@@ -44,5 +40,5 @@ IO.read(:stdio, :eof)
   |> Enum.map(&Enum.map(&1, fn ele -> String.split(ele, ~r/ +/) end))
   |> Enum.map(fn ele -> ScratchCards.calculate_matches(hd(ele), List.last(ele)) end)
   |> Enum.with_index
-  |> (&ScratchCards.generate_copies(:queue.from_list(&1), &1, 0)).()
+  |> (&ScratchCards.generate_copies(&1, &1)).()
   |> IO.inspect()
