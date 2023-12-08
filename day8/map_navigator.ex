@@ -1,5 +1,8 @@
 defmodule MapNavigator do
-  @end_node "ZZZ"
+  #@end_node "ZZZ"
+  # part 2
+  @begin_node ~r/^[0-9A-Z]{2}A$/
+  @end_node ~r/^[0-9A-Z]{2}Z$/
   @left_dir "L"
 
   def parse_network(network) do
@@ -17,13 +20,23 @@ defmodule MapNavigator do
     |> Map.new}
   end
 
-  def step(node, step_index, graph, directions) do
-    if node == @end_node do
-      step_index
+  def step_all_A(graph, directions) do
+    Map.keys(graph)
+    |> Enum.filter(&Regex.match?(@begin_node, &1))
+    |> (&step(Enum.zip(&1, Stream.repeatedly(fn -> 0 end)|> Enum.take(length(&1))), graph, directions)).()
+  end
+
+  def step(nodes_and_steps, graph, directions) do
+      if Enum.all?(nodes_and_steps, &Regex.match?(@end_node, elem(&1, 0))) do
+      nodes_and_steps
     else
-      next_dir = Enum.at(directions, (if step_index > 0, do: rem(step_index, length(directions)), else: 0) )
-      next_step = Map.get(graph, node)
-      step(elem(next_step, next_dir), step_index + 1, graph, directions)
+      advanced = Enum.map(nodes_and_steps, fn nas ->
+        {node, step_index} = nas
+        next_dir = Enum.at(directions, (if step_index > 0, do: rem(step_index, length(directions)), else: 0) )
+        next_step = Map.get(graph, node)
+        {elem(next_step, next_dir), step_index + 1}
+      end)
+      step(advanced, graph, directions)
     end
   end
 
@@ -38,5 +51,7 @@ end
 IO.read(:stdio, :eof)
   |> String.split("\n\n")
   |> (&MapNavigator.parse_network(&1)).()
-  |> (&MapNavigator.step("AAA", 0, elem(&1, 1), elem(&1, 0))).()
+  |> (&MapNavigator.step_all_A(elem(&1, 1), elem(&1, 0))).()
+  |> Enum.map(&elem(&1, 1))
+  |> Enum.max
   |> IO.inspect
