@@ -1,6 +1,7 @@
 defmodule OasisSensor do
   def predict(history) do
     history
+    |> Enum.reverse # part 2
     |> Enum.map(&String.to_integer(&1))
     |> (&diff_until_stable/1).()
   end
