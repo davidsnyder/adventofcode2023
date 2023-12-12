@@ -30,6 +30,13 @@ defmodule GalaxyFinder do
       end
      |> (&Enum.reduce(&1, [], fn t, acc -> {a, b} = t; if a != b and {b, a} not in acc, do: [t | acc], else: acc end)).()
   end
+
+  def distance(pair) do
+    {a, b} = pair
+    {x1, y1} = a
+    {x2, y2} = b
+    :math.sqrt((y2 - y1) * (y2 - y1)) + :math.sqrt((x2 - x1) * (x2 - x1))
+  end
 end
 
 IO.read(:stdio, :eof)
@@ -37,5 +44,7 @@ IO.read(:stdio, :eof)
   |> (&GalaxyFinder.expand(&1)).()
   |> (&GalaxyFinder.find_galaxies(&1)).()
   |> (&GalaxyFinder.permute(&1)).()
-  |> length()
+  |> Enum.map(&GalaxyFinder.distance(&1))
+  |> Enum.sum
+  |> trunc()
   |> IO.inspect(charlists: :as_lists, limit: :infinity)
