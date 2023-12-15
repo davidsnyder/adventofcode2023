@@ -43,7 +43,6 @@ IO.read(:stdio, :eof)
   |> Enum.map(&String.split(&1,""))
   |> Enum.map(&Enum.slice(&1, 1..-2))
   |> (&LoadCalculator.transpose(&1)).()
-
   |> Enum.map(&LoadCalculator.handle_row(&1))
   |> (&LoadCalculator.transpose(&1)).()
   |> Enum.map(&Enum.filter(&1, fn r -> r == LoadCalculator.round_rock end))
